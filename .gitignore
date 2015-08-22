@@ -7,3 +7,14 @@ Thumbs.db
 *.user
 bin/
 obj/
+*_ReSharper*
+bin/*
+Bin/*
+obj/*
+Obj/*
+*.cache
+*.suo
+*.user
+bin/**/*
+*.*crunch*
+*.orig

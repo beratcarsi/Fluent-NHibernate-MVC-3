@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentNHibernateMvc3", "FluentNHibernateMvc3\FluentNHibernateMvc3.csproj", "{A260A9FA-86F3-48F8-9CF4-FAFB46A0D22D}"
 EndProject
 Global

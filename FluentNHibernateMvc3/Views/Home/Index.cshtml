@@ -1,5 +1,7 @@
-﻿@model List<FluentNHibernateMvc3.Models.Store>
-
+﻿@using FluentNHibernateMvc3.Controllers
+@using Mvc.JQuery.Datatables
+@using Mvc.JQuery.Datatables.Models
+@model List<FluentNHibernateMvc3.Models.Store>
 @{
     ViewBag.Title = "Index";
 }
@@ -7,21 +9,81 @@
 <h2>Index</h2>
 
 <ul>
-    @foreach ( var store in Model ) {
+    @foreach (var store in Model)
+    {
         <li>@store.Name</li>
         <ul>
             <li>Products:</li>
             <ul>
-                @foreach ( var product in store.Products ) {
+                @foreach (var product in store.Products)
+                {
                     <li>@product.Name</li>
                 }
             </ul>
             <li>Staff:</li>
             <ul>
-                @foreach ( var employee in store.Staff ) {
+                @foreach (var employee in store.Staff)
+                {
                     <li>@employee.FirstName @employee.LastName</li>
                 }
             </ul>
         </ul>
     }
 </ul>
+
+<p>
+    <h1>Datatable TEST!</h1>
+
+    @{
+        var vm = Html.DataTableVm("table-id", (HomeController c) => c.GetList(null));
+
+        vm.JsOptions.Add("iDisplayLength", 3);
+
+        //vm.JsOptions.Add("aLengthMenu", new object[] { new[] {5, 10, 25, 250, -1} , new object[] { 5, 10, 25, 250, "All"} });
+
+        //vm.JsOptions.Add("fnCreatedRow", new Raw(@"function( nRow, aData, iDataIndex ) {
+        //    $(nRow).attr('data-id', aData[0]);
+        //}"));
+
+        vm.ColumnFilter = true;
+        vm.StateSave = false;
+
+
+        //vm.FilterOn("StateTitle", new { sSelector = "#custom-filter-placeholder-position" }, new { sSearch = "" })
+        //    .Select("Draft", "Published", "Manager");
+        //.FilterOn("Id").NumberRange();
+        //.FilterOn("Id", new { sSelector = "#custom-filter-placeholder-salary" }).NumberRange();
+
+        //.FilterOn("Number").CheckBoxes(Enum.GetNames(typeof(Numbers)));
+        //vm.DrawCallback = "drawCallback";
+
+        //you can change the page length options... 
+        //vm.LengthMenu = LengthMenuVm.Default();
+        //vm.LengthMenu.RemoveAll(t => t.Item2 == 5);
+        //vm.PageLength = 25; //... and set a default
+        //vm.ColVis = true;
+
+    }
+
+
+    @Html.Partial("DataTable", vm)
+
+</p>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery-2.1.4.min.js")"></script>
+
+
+<script type="text/javascript" src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.0/css/jquery.dataTables.css" />
+
+
+<!-- table tools (csv export etc) https://datatables.net/extensions/tabletools -->
+<script type="text/javascript" src="//cdn.datatables.net/tabletools/2.2.1/js/dataTables.tableTools.min.js"></script>
+<link rel="stylesheet" href="//cdn.datatables.net/tabletools/2.2.1/css/dataTables.tableTools.css" />
+
+
+@*<link rel="stylesheet" href="/Content/jquery-datatables-column-filter/media/js/jquery.dataTables.columnFilter.css" />*@
+<script type="text/javascript" src="@Url.Content("~/Scripts/DataTables/jquery.dataTables.columnFilter.js")"></script>
+
+<link rel="stylesheet" href="//cdn.datatables.net/colvis/1.1.1/css/dataTables.colVis.css" />
+<script type="text/javascript" src="//cdn.datatables.net/colvis/1.1.1/js/dataTables.colVis.min.js"></script>

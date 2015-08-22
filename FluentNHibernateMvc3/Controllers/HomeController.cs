@@ -3,17 +3,20 @@ using System.Web.Mvc;
 
 using FluentNHibernateMvc3.Models;
 using FluentNHibernateMvc3.Repositories;
+using Mvc.JQuery.Datatables;
 
 namespace FluentNHibernateMvc3.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IRepository<Store> storeRepository;
+        private readonly IRepository<Product> _products;
 
         // Constructs our home controller
         public HomeController()
         {
             storeRepository = new Repository<Store>();
+            _products = new Repository<Product>();
         }
 
         // Gets all the stores from our database and returns a view that displays them
@@ -21,22 +24,41 @@ namespace FluentNHibernateMvc3.Controllers
         {
             var stores = storeRepository.GetAll();
 
-            return View( stores.ToList() );
+            return View(stores.ToList());
         }
+
+        // datatable test method
+        public DataTablesResult<GridModel> GetList(DataTablesParam dataTableParam)
+        {
+            var articleList = _products.GetAll();
+
+            var articleGridModels = articleList.Select(x => new GridModel() { Id = x.Id, Title = x.Name });
+
+            return DataTablesResult.Create(articleGridModels, dataTableParam);
+        }
+
+        // dt view model
+        public class GridModel
+        {
+            [DataTables(SortDirection = SortDirection.Ascending, Order = 0)]
+            public int Id { get; set; }
+            public string Title { get; set; }
+        }
+
 
         // Gets and modifies a single store from our database
         public ActionResult Test()
         {
-            var barginBasin = storeRepository.Get( s => s.Name == "Bargin Basin" ).SingleOrDefault();
+            var barginBasin = storeRepository.Get(s => s.Name == "Bargin Basin").SingleOrDefault();
 
-            if ( barginBasin == null )
+            if (barginBasin == null)
             {
-                return RedirectToAction( "Index" );
+                return RedirectToAction("Index");
             }
 
             barginBasin.Name = "Bargain Basin";
 
-            return RedirectToAction( "Index" );
+            return RedirectToAction("Index");
         }
 
         // Adds sample data to our database
@@ -61,34 +83,34 @@ namespace FluentNHibernateMvc3.Controllers
 
             // Add Products to the Stores
             // The Store-Product relationship is many-to-many
-            AddProductsToStore( barginBasin, potatoes, fish, milk, bread, cheese );
-            AddProductsToStore( superMart, bread, cheese, waffles );
+            AddProductsToStore(barginBasin, potatoes, fish, milk, bread, cheese);
+            AddProductsToStore(superMart, bread, cheese, waffles);
 
             // Add Employees to the Stores
             // The Store-Employee relationship is one-to-many
-            AddEmployeesToStore( barginBasin, daisy, jack, sue );
-            AddEmployeesToStore( superMart, bill, joan );
+            AddEmployeesToStore(barginBasin, daisy, jack, sue);
+            AddEmployeesToStore(superMart, bill, joan);
 
-            storeRepository.SaveOrUpdateAll( barginBasin, superMart );
+            storeRepository.SaveOrUpdateAll(barginBasin, superMart);
 
-            return RedirectToAction( "Index" );
+            return RedirectToAction("Index");
         }
 
         // Adds any products that we pass in to the store that we pass in
-        private void AddProductsToStore( Store store, params Product[] products )
+        private void AddProductsToStore(Store store, params Product[] products)
         {
-            foreach ( var product in products )
+            foreach (var product in products)
             {
-                store.AddProduct( product );
+                store.AddProduct(product);
             }
         }
 
         // Adds any employees that we pass in to the store that we pass in
-        private void AddEmployeesToStore( Store store, params Employee[] employees )
+        private void AddEmployeesToStore(Store store, params Employee[] employees)
         {
-            foreach ( var employee in employees )
+            foreach (var employee in employees)
             {
-                store.AddEmployee( employee );
+                store.AddEmployee(employee);
             }
         }
     }
